@@ -1,0 +1,48 @@
+name: CI
+on: [pull_request]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Lint check
+        run: pnpm lint
+      - name: Lint fix check
+        run: |
+          pnpm lint --fix
+          git diff --exit-code
+      - name: Formatting check
+        run: pnpm format-check
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Compile typescript
+        run: pnpm build
+      - name: Run tests
+        run: pnpm test
