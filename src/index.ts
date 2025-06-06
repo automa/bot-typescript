@@ -62,7 +62,7 @@ app.post<{
       {
         ...request.body.data,
         proposal: {
-          message: 'We changed your code',
+          title: 'We changed your code',
         },
       },
       {
