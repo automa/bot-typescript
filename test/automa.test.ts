@@ -114,7 +114,7 @@ suite('automa hook', () => {
             title: 'Running bot-typescript on sample-repo',
           },
           proposal: {
-            message: 'We changed your code',
+            title: 'We changed your code',
           },
         },
         {
@@ -210,7 +210,7 @@ suite('automa hook', () => {
             title: 'Running bot-typescript on sample-repo',
           },
           proposal: {
-            message: 'We changed your code',
+            title: 'We changed your code',
           },
         },
         {
