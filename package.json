@@ -13,7 +13,7 @@
   "scripts": {
     "build": "rm -rf build && tsc -b --force",
     "dev": "tsc -b -w --preserveWatchOutput",
-    "format": "prettier --write .",
+    "format": "prettier --write . --log-level warn",
     "format-check": "prettier --check .",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
