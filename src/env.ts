@@ -1,25 +1,21 @@
 import { dirname, join } from 'node:path';
 
-import { Static, Type } from '@sinclair/typebox';
 import envSchema from 'nested-env-schema';
+import { z } from 'zod/v4';
 
 export const environment = process.env.NODE_ENV || 'development';
 
-const schema = Type.Object({
-  AUTOMA: Type.Object({
-    WEBHOOK_SECRET: Type.String({
-      default: 'atma_whsec_bot-typescript',
-    }),
+const schema = z.object({
+  AUTOMA: z.object({
+    WEBHOOK_SECRET: z.string().default('atma_whsec_bot-typescript'),
   }),
-  PORT: Type.Number({
-    default: 3000,
-  }),
+  PORT: z.number().default(3000),
 });
 
-type Schema = Static<typeof schema>;
+type Schema = z.infer<typeof schema>;
 
 export const env = envSchema<Schema>({
-  schema,
+  schema: z.toJSONSchema(schema),
   dotenv: {
     path: join(dirname(__dirname), '.env'),
   },
