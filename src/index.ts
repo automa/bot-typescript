@@ -3,7 +3,11 @@ import { env } from './env';
 
 import fastify from 'fastify';
 import fastifySensible from '@fastify/sensible';
-import Automa, { verifyWebhook } from '@automa/bot';
+import Automa, {
+  verifyWebhook,
+  WebhookEventType,
+  WebhookPayload,
+} from '@automa/bot';
 
 import { update } from './update';
 
@@ -21,18 +25,13 @@ app.get('/health', async (request, reply) => {
 });
 
 app.post<{
-  Body: {
-    id: string;
-    timestamp: string;
-    data: {
-      task: {
-        id: number;
-        token: string;
-        title: string;
-      };
-    };
-  };
+  Body: WebhookPayload;
 }>('/automa', async (request, reply) => {
+  // Skip if not `task.created` event
+  if (request.body.type !== WebhookEventType.TaskCreated) {
+    return reply.code(204).send();
+  }
+
   const signature = request.headers['webhook-signature'] as string;
 
   // Verify request

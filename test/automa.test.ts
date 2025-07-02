@@ -14,6 +14,7 @@ import { env } from '../src/env';
 const payload = {
   id: 'whmsg_1',
   timestamp: '2025-05-30T09:30:06.261Z',
+  type: 'task.created',
 };
 
 const callWithFixture = async (fileName: string) => {
@@ -53,11 +54,24 @@ suite('automa hook', () => {
     cleanupStub.restore();
   });
 
+  test('with non task.created event should return 204', async () => {
+    const response = await call(app, '/automa', {
+      method: 'POST',
+      headers: {},
+      payload: {
+        ...payload,
+        type: 'proposal.rejected',
+      },
+    });
+
+    assert.equal(response.statusCode, 204);
+  });
+
   test('with no signature should return 401', async () => {
     const response = await call(app, '/automa', {
       method: 'POST',
       headers: {},
-      payload: {},
+      payload,
     });
 
     assert.equal(response.statusCode, 401);
