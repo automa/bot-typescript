@@ -54,7 +54,7 @@ app.post<{
     // **NOTE**: If this takes a long time, make
     // sure to return a response to the webhook
     // before starting the update process.
-    await update(folder);
+    await update(folder, request.body.data.task);
 
     // Propose code
     await automa.code.propose(
