@@ -4,11 +4,10 @@ import { join } from 'node:path';
 import { LightMyRequestResponse } from 'fastify';
 import { assert } from 'chai';
 import sinon, { SinonStub } from 'sinon';
-import { CodeFolder, generateWebhookSignature } from '@automa/bot';
+import { Code, CodeFolder, generateWebhookSignature } from '@automa/bot';
 
 import { call, app } from './utils';
 
-import { automa } from '../src';
 import { env } from '../src/env';
 
 const payload = {
@@ -40,12 +39,12 @@ suite('automa hook', () => {
 
   setup(() => {
     downloadStub = sinon
-      .stub(automa.code, 'download')
+      .stub(Code.prototype, 'download')
       .resolves(new CodeFolder(join(__dirname, 'fixtures', 'code')));
 
-    proposeStub = sinon.stub(automa.code, 'propose').resolves();
+    proposeStub = sinon.stub(Code.prototype, 'propose').resolves();
 
-    cleanupStub = sinon.stub(automa.code, 'cleanup').resolves();
+    cleanupStub = sinon.stub(Code.prototype, 'cleanup').resolves();
   });
 
   teardown(() => {
@@ -112,9 +111,6 @@ suite('automa hook', () => {
             title: 'Running bot-typescript on sample-repo',
           },
         },
-        {
-          baseURL: 'https://api.automa.app',
-        },
       ]);
     });
 
@@ -130,9 +126,6 @@ suite('automa hook', () => {
           proposal: {
             title: 'We changed your code',
           },
-        },
-        {
-          baseURL: 'https://api.automa.app',
         },
       ]);
     });
@@ -172,9 +165,6 @@ suite('automa hook', () => {
             title: 'Running bot-typescript on sample-repo',
           },
         },
-        {
-          baseURL: 'https://api.automa.app',
-        },
       ]);
     });
 
@@ -208,9 +198,6 @@ suite('automa hook', () => {
             title: 'Running bot-typescript on sample-repo',
           },
         },
-        {
-          baseURL: 'https://api.automa.app',
-        },
       ]);
     });
 
@@ -226,9 +213,6 @@ suite('automa hook', () => {
           proposal: {
             title: 'We changed your code',
           },
-        },
-        {
-          baseURL: 'https://api.automa.app',
         },
       ]);
     });

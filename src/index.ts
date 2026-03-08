@@ -11,9 +11,6 @@ import Automa, {
 
 import { update } from './update';
 
-// Create client
-export const automa = new Automa();
-
 export const app = fastify({
   logger: true,
 });
@@ -43,8 +40,11 @@ app.post<{
 
   const baseURL = request.headers['x-automa-server-host'] as string;
 
+  // Create client with base URL
+  const automa = new Automa({ baseURL });
+
   // Download code
-  const folder = await automa.code.download(request.body.data, { baseURL });
+  const folder = await automa.code.download(request.body.data);
 
   try {
     // Main logic for updating the code. It takes
@@ -57,17 +57,12 @@ app.post<{
     await update(folder, request.body.data.task);
 
     // Propose code
-    await automa.code.propose(
-      {
-        ...request.body.data,
-        proposal: {
-          title: 'We changed your code',
-        },
+    await automa.code.propose({
+      ...request.body.data,
+      proposal: {
+        title: 'We changed your code',
       },
-      {
-        baseURL,
-      },
-    );
+    });
   } finally {
     // Clean up
     automa.code.cleanup(request.body.data);
